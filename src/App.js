@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState } from "react";
+import Ball from "./components/Ball";
 
 function App() {
+  const [balls, setBalls] = useState([]);
+
+  const handleClick = (e) => {
+    const newBall = {
+      id: Date.now(),
+      x: e.clientX,
+      y: e.clientY,
+    };
+    setBalls((prev) => [...prev, newBall]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      onClick={handleClick}
+      style={{
+        width: "100vw",
+        height: "100vh",
+        // backgroundColor: "#f0f0f0",
+        // position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {balls.map((ball) => (
+        <Ball key={ball.id} id={ball.id} x={ball.x} y={ball.y} />
+      ))}
     </div>
   );
 }
