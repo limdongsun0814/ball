@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ballAudio from "../audio/ball.mp3";
+import BallSound from "../object/BallSound";
 
 const Ball = ({ x, y }) => {
   const [posY, setPosY] = useState(y);
@@ -15,13 +15,7 @@ const Ball = ({ x, y }) => {
   const lastTimeRef = useRef(null);
   const animationRef = useRef(null);
   const lastBounceTimeRef = useRef(-200);
-  const contextRef = useRef(null);
-
-  if (!contextRef.current) {
-    contextRef.current = new (window.AudioContext ||
-      window.webkitAudioContext)();
-  }
-  const bufferRef = useRef(null);
+  const soundRef = useRef(BallSound.getBallSoundInstance());
 
   const animate = (timestamp) => {
     if (!lastTimeRef.current) lastTimeRef.current = timestamp;
@@ -38,12 +32,12 @@ const Ball = ({ x, y }) => {
       velocityRef.current = -velocityRef.current * energyLoss;
 
       // 마지막 반사 후 잠시 대기 (0.2초)
-      if (timestamp - lastBounceTimeRef.current > 200) {
-        playSound();
+      if (timestamp - lastBounceTimeRef.current > 10) {
+        soundRef.current.play();
         lastBounceTimeRef.current = timestamp;
       }
 
-      if (Math.abs(velocityRef.current) < 50) {
+      if (Math.abs(velocityRef.current) < 10) {
         cancelAnimationFrame(animationRef.current);
         setTimeout(() => {
           setDisplay(false);
@@ -57,24 +51,9 @@ const Ball = ({ x, y }) => {
   };
 
   useEffect(() => {
-    fetch(ballAudio)
-      .then((res) => res.arrayBuffer())
-      .then((data) => contextRef.current.decodeAudioData(data))
-      .then((buffer) => {
-        bufferRef.current = buffer;
-      });
     animationRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationRef.current);
   }, []);
-
-  // 재생 함수
-  const playSound = () => {
-    if (!bufferRef.current) return;
-    const source = contextRef.current.createBufferSource();
-    source.buffer = bufferRef.current;
-    source.connect(contextRef.current.destination);
-    source.start();
-  };
 
   return (
     <>
