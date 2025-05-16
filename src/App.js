@@ -11,6 +11,7 @@ function App() {
       x: e.clientX,
       y: e.clientY,
     };
+    alert("클릭하면 공이 생성됩니다!");
     setBalls((prev) => [...prev, newBall]);
   };
 
