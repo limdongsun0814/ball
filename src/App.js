@@ -4,6 +4,7 @@ import Ball from "./components/Ball";
 
 function App() {
   const [balls, setBalls] = useState([]);
+  alert("클릭하면 공이 생성됩니다!");
 
   const handleClick = (e) => {
     const newBall = {
@@ -11,7 +12,6 @@ function App() {
       x: e.clientX,
       y: e.clientY,
     };
-    alert("클릭하면 공이 생성됩니다!");
     setBalls((prev) => [...prev, newBall]);
   };
 
