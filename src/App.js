@@ -1,11 +1,12 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Ball from "./components/Ball";
 
 function App() {
   const [balls, setBalls] = useState([]);
-  alert("클릭하면 공이 생성됩니다!");
-
+  useEffect(() => {
+    alert("클릭하면 공이 생성됩니다!");
+  }, []);
   const handleClick = (e) => {
     const newBall = {
       id: Date.now(),
